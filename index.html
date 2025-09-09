@@ -3,18 +3,122 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jättefint formulär</title>
-    <script defer src="main.js"></script>
+    <title>Code 5 </title>
+    <style>
+      :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+      body { margin: 0; padding: 2rem; background: #0b0f14; color: #e6edf3; }
+      .card { max-width: 560px; margin: 0 auto; background: #0f1720; border: 1px solid #1f2a37; border-radius: 16px; padding: 24px; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+      h1 { margin-top: 0; font-size: 1.5rem; }
+      form { display: grid; gap: 16px; }
+      label { font-size: .95rem; font-weight: 600; color: #c9d1d9; }
+      .row { display: grid; gap: 8px; }
+      input, select, button { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid #2b3745; background: #0b1220; color: #e6edf3; outline: none; }
+      input:focus, select:focus { border-color: #627597; box-shadow: 0 0 0 3px rgba(98,117,151,.25); }
+      .range-wrap { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+      output { min-width: 3ch; text-align: right; font-variant-numeric: tabular-nums; background: #0b1220; padding: 10px 12px; border: 1px solid #2b3745; border-radius: 10px; }
+      button[type="submit"] { cursor: pointer; background: #304ffe; border-color: transparent; }
+      button[type="submit"]:hover { filter: brightness(1.05); }
+      .hint { color: #94a3b8; font-size: .9rem; }
+    </style>
   </head>
-  <style>
-    form {
-      font-size: 1rem;
-      input {
-        font-size: 1rem;
-      }
-    }
-  </style>
   <body>
-    <form id="basicForm"></form>
+    <div class="card">
+      <h1>Bootcamp</h1>
+
+      <!-- Alla element laggs inom detta <form> -->
+      <form id="basicForm">
+        <!-- Namn -->
+        <div class="row">
+          <label for="name">Your Namn</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Skriv ditt namn"
+            autocomplete="name"
+            required
+            value=""
+          />
+        </div>
+
+        <!-- E-post -->
+        <div class="row">
+          <label for="email">E-Mail</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="namn@example.com"
+            autocomplete="email"
+            required
+            value=""
+          />
+        </div>
+
+        <!-- Range + output -->
+        <div class="row">
+          <label for="amount">Amount</label>
+          <div class="range-wrap">
+            <input
+              id="amount"
+              name="amount"
+              type="range"
+              min="1"
+              max="10"
+              step="1"
+              value="1"
+              aria-describedby="amountHelp"
+            />
+            <output id="result" name="result" for="amount">1</output>
+          </div>
+          <p class="hint" id="amountHelp">Drag the slider - where it appears in the box - to the right.</p>
+        </div>
+
+        <!-- Bonus: select med 3+ alternativ -->
+        <div class="row">
+          <label for="topic">Roller categories (Bonus)</label>
+          <select id="topic" name="topic">
+            <option value="html" selected>HTML</option>
+            <option value="css">CSS</option>
+            <option value="js">JavaScript</option>
+            <option value="a11y">Tillganglighet</option>
+          </select>
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <p class="hint">When you submit the form, an object is logged with <code>name</code>, <code>email</code> and <code>amount</code> in DevTools‑konsolen.</p>
+    </div>
+
+    <script>
+      // Hamta element
+      const form = document.getElementById('basicForm');
+      const amount = document.getElementById('amount');
+      const result = document.getElementById('result');
+
+      // Satt ursprungligt result-varde till amount.min om inget varde finns
+      const initial = amount.value || amount.min;
+      result.textContent = initial;
+
+      // Uppdatera <output> nar range andras
+      amount.addEventListener('input', () => {
+        result.textContent = amount.value;
+      });
+
+      // Logga objektet vid submit (utan att ladda om sidan)
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const payload = {
+          name: form.elements.name.value.trim(),
+          email: form.elements.email.value.trim(),
+          amount: Number(form.elements.amount.value)
+        };
+        console.log('Form data -', payload);
+        // For demo: liten visuell bekraftelse
+        form.querySelector('button[type="submit"]').textContent = 'Skickat! ';
+        setTimeout(() => (form.querySelector('button[type="submit"]').textContent = 'Skicka'), 1200);
+      });
+    </script>
   </body>
 </html>
